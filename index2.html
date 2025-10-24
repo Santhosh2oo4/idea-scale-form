@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinical Questionnaire — Demographics, Clinical, Trail Making, IDEA Scale</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0ea5a4;
+      --secondary: #0b74de;
+      --danger: #ef4444;
+      --success: #10b981;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow);
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .header p {
+      font-size: 16px;
+      opacity: 0.95;
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section-icon {
+      font-size: 24px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .domain {
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 8px;
+    }
+
+    .domain h3 {
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    .question {
+      margin-bottom: 28px;
+    }
+
+    .question-label {
+      font-weight: 500;
+      margin-bottom: 12px;
+      display: block;
+      color: var(--text);
+      font-size: 15px;
+    }
+
+    .question-number {
+      color: var(--primary);
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(14, 165, 164, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .radio-group,
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .radio-option,
+    .checkbox-option {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: #f8fafc;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .radio-option:hover,
+    .checkbox-option:hover {
+      background: #f1f5f9;
+      border-color: var(--primary);
+    }
+
+    .radio-option input,
+    .checkbox-option input {
+      margin-right: 12px;
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+    }
+
+    .radio-option.selected,
+    .checkbox-option.selected {
+      background: rgba(14, 165, 164, 0.1);
+      border-color: var(--primary);
+      font-weight: 500;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0d8f8e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(14, 165, 164, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #0a5fb8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(11, 116, 222, 0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .success-message {
+      display: none;
+      background: var(--success);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 20px;
+      animation: slideIn 0.5s ease;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .progress-bar {
+      position: sticky;
+      top: 0;
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 100;
+      margin-bottom: 30px;
+      border-radius: 12px;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .progress {
+      height: 8px;
+      background: var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .required {
+      color: var(--danger);
+      margin-left: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 30px 20px;
+      }
+
+      .header h1 {
+        font-size: 24px;
+      }
+
+      .section {
+        padding: 20px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📋 Clinical Questionnaire</h1>
+      <p>Demographics • Clinical Details • Trail Making Test • IDEA Scale</p>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-text">Progress: <span id="progressText">0%</span></div>
+      <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <form id="questionnaireForm">
+      <!-- SECTION C: IDEA SCALE -->
+      <div class="section">
+        <div class="section-header">
+          <span class="section-icon">🟥</span>
+          <h2 class="section-title">SECTION C – IDEA SCALE</h2>
+        </div>
+        <p class="section-desc">Indian Disability Evaluation and Assessment Scale — select the most appropriate option for each activity.</p>
+
+        <!-- DOMAIN A: SELF CARE -->
+        <div class="domain">
+          <h3>DOMAIN A — SELF CARE</h3>
+
+          <div class="question">
+            <label class="question-label">1. Maintenance of personal hygiene and physical health</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="a1" value="Able to do on own">
+                Able to do on own
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a1" value="Partially dependent">
+                Partially dependent upon others
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a1" value="Completely dependent">
+                Completely dependent upon others
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a1" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">2. Eating habits</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="a2" value="Able to eat on own">
+                Able to eat on own
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a2" value="Partially dependent">
+                Partially dependent upon others
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a2" value="Completely dependent">
+                Completely dependent upon others
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a2" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">3. Maintenance of personal belongings and living space</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="a3" value="Able to do on own">
+                Able to do on own
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a3" value="Partially dependent">
+                Partially dependent upon others
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a3" value="Completely dependent">
+                Completely dependent upon others
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a3" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">4. Brushing teeth, bath, washing of clothes, and self-care</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="a4" value="Able to do on own">
+                Able to do on own
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a4" value="Partially dependent">
+                Partially dependent upon others
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a4" value="Completely dependent">
+                Completely dependent upon others
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a4" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">5. Regular meals</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="a5" value="Yes, takes regularly">
+                Yes, takes regularly
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a5" value="No, skips frequently">
+                No, skips frequently
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a5" value="Avoids eating">
+                Avoids eating
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="a5" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOMAIN B: INTERPERSONAL ACTIVITIES -->
+        <div class="domain">
+          <h3>DOMAIN B — INTERPERSONAL ACTIVITIES</h3>
+
+          <div class="question">
+            <label class="question-label">1. Behaviour with others</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="b1" value="Proper behaviour">
+                Proper behaviour
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b1" value="Improper behaviour">
+                Improper behaviour
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b1" value="Exhibits abnormal behaviour">
+                Exhibits abnormal behaviour
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b1" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">2. Responds to questions</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="b2" value="Responds appropriately">
+                Responds appropriately
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b2" value="Responds inappropriately">
+                Responds inappropriately
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b2" value="Never responds">
+                Never responds
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b2" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">3. Ability to regulate aggression</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="b3" value="Able to control">
+                Able to control
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b3" value="Sometimes able to control">
+                Sometimes able to control
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b3" value="Unable to control">
+                Unable to control
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b3" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">4. Behaviour with strangers</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="b4" value="Proper behaviour">
+                Proper behaviour
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b4" value="Improper behaviour">
+                Improper behaviour
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b4" value="Exhibits abnormal behaviour">
+                Exhibits abnormal behaviour
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b4" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">5. Acts independently in social interactions</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="b5" value="Able to interact independently">
+                Able to interact independently
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b5" value="Sometimes able to interact independently">
+                Sometimes able to interact independently
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b5" value="Unable to interact independently">
+                Unable to interact independently
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b5" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">6. Maintains friendship</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="b6" value="Able to maintain friendship">
+                Able to maintain friendship
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b6" value="Unable to maintain friendship">
+                Unable to maintain friendship
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b6" value="Never speaks">
+                Never speaks
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="b6" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOMAIN C: COMMUNICATION AND UNDERSTANDING -->
+        <div class="domain">
+          <h3>DOMAIN C — COMMUNICATION AND UNDERSTANDING</h3>
+
+          <div class="question">
+            <label class="question-label">1. Avoids talking to people</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="c1" value="Yes, avoids talking to people">
+                Yes, avoids talking to people
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="c1" value="No, tries to engage in conversation">
+                No, tries to engage in conversation
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="c1" value="Never avoids to speak">
+                Never avoids to speak
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="c1" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">2. When people come home, what does he do?</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="c2" value="Greets them with gratitude">
+                Greets them with gratitude
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="c2" value="Moves away from the place">
+                Moves away from the place
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="c2" value="Does not speak/greet them">
+                Does not speak/greet them
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="c2" value="Others">
+                Others
+              </label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label class="question-label">3. Visits others</label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="c3" value="Yes">
+                Yes
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="c3" value="No">
+                No
+              </label>
+              <label class="radio-option">
+                <i
